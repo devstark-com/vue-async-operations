@@ -1,8 +1,8 @@
 var webpack = require('webpack')
 var ExtractTextPlugin = require('extract-text-webpack-plugin')
 
-var outputFile = 'vue-async-operation'
-var globalName = 'VueAsyncOperation'
+var outputFile = 'vue-async-operations'
+var globalName = 'VueAsyncOperations'
 
 var config = require('../package.json')
 

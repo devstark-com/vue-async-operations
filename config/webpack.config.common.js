@@ -3,8 +3,8 @@ var merge = require('webpack-merge')
 var base = require('./webpack.config.base')
 var path = require('path')
 
-var outputFile = 'vue-async-operation'
-var globalName = 'VueAsyncOperation'
+var outputFile = 'vue-async-operations'
+var globalName = 'VueAsyncOperations'
 
 module.exports = merge(base, {
   output: {
