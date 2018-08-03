@@ -89,17 +89,12 @@ export default {
       const arr = Object.entries(batch).map(([key, value]) => {
         const childPath = batchPath + '.' + key
         const child = resolvePath(childPath, vm.$data[this.cfg.dataPropName])
-        return child.$perform()
+        const operationArgs = [...args][0][key]
+        return child.$perform(operationArgs)
       })
       Promise.all(arr).then(
-        res => {
-          resolve(res)
-          this.handleResolve(vm, state)
-        },
-        err => {
-          reject(err)
-          this.handleReject(vm, state, err)
-        }
+        result => this.handleResolve(vm, state, result, resolve),
+        err => this.handleReject(vm, state, err, reject)
       )
     })
   },
@@ -116,26 +111,23 @@ export default {
     this.resetStates(vm, state)
     return new Promise((resolve, reject) => {
       let result
-      if (typeof func === 'function') result = func(args)
-      if (typeof func === 'string') result = vm[func](args)
-
-      // @todo add Promise.all() case
-
-      if (!result.then) {
-        // @todo decide support non-promise return type or throw an exception
-        resolve(result)
-        return this.handleResolve(vm, state)
+      if (typeof func === 'string') result = vm[func](...args)
+      if (typeof func === 'function') {
+        result = func.call(vm, ...args)
       }
 
+      if (Array.isArray(result)) {
+        return Promise.all(result).then(
+          res => this.handleResolve(vm, state, res, resolve),
+          err => this.handleReject(vm, state, err, reject)
+        )
+      }
+
+      if (!result.then) return this.handleResolve(vm, state, result, resolve)
+
       result.then(
-        res => {
-          resolve(res)
-          this.handleResolve(vm, state)
-        },
-        err => {
-          reject(err)
-          this.handleReject(vm, state, err)
-        }
+        res => this.handleResolve(vm, state, res, resolve),
+        err => this.handleReject(vm, state, err, reject)
       )
     })
   },
@@ -147,12 +139,14 @@ export default {
     vm.$set(state, '$pending', true)
   },
 
-  handleResolve (vm, state) {
+  handleResolve (vm, state, result, resolve) {
+    resolve(result)
     vm.$set(state, '$pending', false)
     vm.$set(state, '$resolved', true)
   },
 
-  handleReject (vm, state, err) {
+  handleReject (vm, state, err, reject) {
+    reject(err)
     vm.$set(state, '$pending', false)
     vm.$set(state, '$rejected', true)
     vm.$set(state, '$err', err)
