@@ -1,5 +1,8 @@
 # vue-async-operations
 
+[![npm](https://img.shields.io/npm/v/vue-async-operations.svg) ![npm](https://img.shields.io/npm/dm/vue-async-operations.svg)](https://www.npmjs.com/package/vue-async-operations)
+[![vue2](https://img.shields.io/badge/vue-2.x-brightgreen.svg)](https://vuejs.org/)
+
 > Managing async operations statuses in your Vue components
 
 ### Install
