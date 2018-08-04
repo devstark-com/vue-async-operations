@@ -1,7 +1,7 @@
 {
   "name": "vue-async-operations",
   "description": "Managing async operations statuses in your Vue components",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": {
     "name": "Max Yelisyeyev",
     "email": "saymon.biz@gmail.com"
