@@ -89,7 +89,8 @@ export default {
       const arr = Object.entries(batch).map(([key, value]) => {
         const childPath = batchPath + '.' + key
         const child = resolvePath(childPath, vm.$data[this.cfg.dataPropName])
-        const operationArgs = [...args][0][key]
+        const allArgs = [...args][0]
+        const operationArgs = !allArgs ? undefined : allArgs[key]
         return child.$perform(operationArgs)
       })
       Promise.all(arr).then(
