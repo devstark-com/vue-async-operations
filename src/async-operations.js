@@ -61,8 +61,6 @@ export default {
       $perform: (...args) => {
         const relPath = path.split('.').filter(el => el !== this.cfg.dataPropName).join('.')
         const nodePath = (relPath === '' ? '' : relPath + '.') + key
-        const node = resolvePath(nodePath, vm.$data[this.cfg.dataPropName])
-        if (node.$pending) return Promise.resolve({pending: true})
 
         switch (type) {
           case 'batch':
